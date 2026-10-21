@@ -1,0 +1,22 @@
+# Dependabot: automatic pull requests when a pinned dependency has a new version or a security fix.
+# After merging an npm update run `npm run build` (CI does this check for you) so the vendored
+# copies in /vendor and their SRI hashes stay in step with package-lock.json.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
+    groups:
+      frontend-libs:
+        patterns: ["@supabase/*", "chart.js", "@fortawesome/*"]
+      build-tools:
+        patterns: ["tailwindcss", "@tailwindcss/*"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies"]

@@ -1,9 +1,10 @@
+'use strict';
 let reportStatusChart = null, reportBookingChart = null;
 
 async function loadReports() {
   const [{ data: boats }, { data: bookings }, { data: payments }] = await Promise.all([
-    sb.from('boats').select('status'),
-    sb.from('bookings').select('status, payment_status, total_amount, created_at'),
+    sb.from('boats').select('status').is('deleted_at', null),
+    sb.from('bookings').select('status, payment_status, total_amount, created_at').is('deleted_at', null),
     sb.from('payments').select('amount, created_at'),
   ]);
 
@@ -33,10 +34,10 @@ async function loadReports() {
   const unpaidCount   = (bookings||[]).filter(b => b.payment_status==='Unpaid' && b.status==='Approved').length;
 
   document.getElementById('report-summary').innerHTML = `
-    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Total Revenue Collected</div><p class="text-2xl font-bold text-cyan-400">${fmt(totalRevenue)}</p></div>
-    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Total Bookings</div><p class="text-2xl font-bold">${totalBookings}</p></div>
-    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Avg Booking Value</div><p class="text-2xl font-bold">${fmt(avgValue)}</p></div>
-    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Awaiting Payment</div><p class="text-2xl font-bold text-orange-400">${unpaidCount}</p></div>
+    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Total Revenue Collected</div><p class="text-2xl font-bold text-cyan-400">${esc(fmt(totalRevenue))}</p></div>
+    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Total Bookings</div><p class="text-2xl font-bold">${esc(totalBookings)}</p></div>
+    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Avg Booking Value</div><p class="text-2xl font-bold">${esc(fmt(avgValue))}</p></div>
+    <div class="card p-5"><div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Awaiting Payment</div><p class="text-2xl font-bold text-orange-400">${esc(unpaidCount)}</p></div>
   `;
 }
 

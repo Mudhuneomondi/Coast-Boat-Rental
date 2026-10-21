@@ -3,22 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coast Boat Rental | CBRDMS v1.0</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="css/styles.css">
-  <script>
-    // Catch ALL JS errors and show as alert so nothing is silent
-    window.onerror = function(msg, src, line) {
-      alert('ERROR: ' + msg + '\nFile: ' + src + '\nLine: ' + line);
-    };
-    window.addEventListener('unhandledrejection', function(e) {
-      alert('ASYNC ERROR: ' + (e.reason?.message || e.reason));
-    });
-    console.log('HEAD script running OK');
-  </script>
+  <title>Coast Boat Rental | CBRDMS v1.1</title>
+  <!-- Content-Security-Policy: only our own files + our own Supabase project. No inline scripts,
+       no eval, no third-party CDNs. (frame-ancestors / HSTS etc. are sent as HTTP headers — see _headers, vercel.json) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data: blob: https://vvnokweblgojqaqlbsyh.supabase.co; font-src 'self'; connect-src 'self' https://vvnokweblgojqaqlbsyh.supabase.co wss://vvnokweblgojqaqlbsyh.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="stylesheet" href="vendor/tailwind.css" integrity="sha384-Li3RojCSaDXKLgCaKYCAPi4wYk55dbY6FQZpgV59qn293uUo8sWUZSpHXFj01ary" crossorigin="anonymous">
+  <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css" integrity="sha384-nRgPTkuX86pH8yjPJUAFuASXQSSl2/bBUiNV47vSYpKFxHJhbcrGnmlYpYJMeD7a" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css" integrity="sha384-FwPiZDokNbdDqTC2F+SlueZS46c+81K6MPeN17P8nM0dQsDGJwkRMm2Zc13+sBCf" crossorigin="anonymous">
 </head>
 <body class="h-full bg-gray-950 text-white">
 
@@ -33,34 +25,34 @@
       <div class="text-center mb-8">
         <i class="fas fa-ship text-5xl text-cyan-400 mb-3 block"></i>
         <h1 class="text-4xl font-bold">Coast Boat Rental</h1>
-        <p class="text-cyan-300 mt-1 text-sm">Digital Management System v1.0</p>
+        <p class="text-cyan-300 mt-1 text-sm">Digital Management System v1.1</p>
       </div>
       <div class="space-y-4">
         <div>
           <label class="block text-sm mb-1 text-cyan-200">Email Address</label>
-          <input id="uni-email" type="email" placeholder="Enter your email"
+          <input id="uni-email" type="email" autocomplete="username" maxlength="254" placeholder="Enter your email"
             class="placeholder-gray-500"
-            onkeydown="if(event.key==='Enter')unifiedLogin()">
+            data-enter="unifiedLogin">
         </div>
         <div class="relative">
           <label class="block text-sm mb-1 text-cyan-200">Password</label>
-          <input id="uni-password" type="password" placeholder="••••••••"
+          <input id="uni-password" type="password" autocomplete="current-password" maxlength="128" placeholder="••••••••"
             class="placeholder-gray-500 pr-12"
-            onkeydown="if(event.key==='Enter')unifiedLogin()">
+            data-enter="unifiedLogin">
           <!-- Toggle password visibility -->
-          <button type="button" onclick="togglePwd('uni-password','uni-pwd-icon')"
+          <button type="button" data-click="togglePwd" data-args='["uni-password","uni-pwd-icon"]'
             class="absolute right-4 top-9 text-gray-400 hover:text-white">
             <i id="uni-pwd-icon" class="fas fa-eye"></i>
           </button>
         </div>
         <div id="login-error" class="hidden text-red-300 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3"></div>
-        <button type="button" onclick="unifiedLogin()" id="login-btn"
+        <button type="button" data-click="unifiedLogin" id="login-btn"
           class="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-bold py-4 rounded-2xl text-lg transition-colors">
           <i class="fas fa-sign-in-alt mr-2"></i> Sign In
         </button>
         <p class="text-center text-sm text-gray-400 pt-1">
           Don't have an account?
-          <a onclick="showPanel('panel-signup')" class="text-cyan-400 hover:underline cursor-pointer font-medium">Sign up</a>
+          <a data-click="showPanel" data-args='["panel-signup"]' class="text-cyan-400 hover:underline cursor-pointer font-medium">Sign up</a>
         </p>
       </div>
     </div>
@@ -75,32 +67,32 @@
       <div class="space-y-3">
         <div>
           <label class="block text-sm mb-1 text-cyan-200">Full Name *</label>
-          <input id="su-name" placeholder="John Doe" class="placeholder-gray-500">
+          <input id="su-name" autocomplete="name" maxlength="100" placeholder="John Doe" class="placeholder-gray-500">
         </div>
         <div>
           <label class="block text-sm mb-1 text-cyan-200">Email Address *</label>
-          <input id="su-email" type="email" placeholder="your@email.com" class="placeholder-gray-500">
+          <input id="su-email" type="email" autocomplete="email" maxlength="254" placeholder="your@email.com" class="placeholder-gray-500">
         </div>
         <div class="relative">
-          <label class="block text-sm mb-1 text-cyan-200">Password * <span class="text-gray-500 font-normal">(min 6 characters)</span></label>
-          <input id="su-password" type="password" placeholder="••••••••" class="placeholder-gray-500 pr-12">
-          <button type="button" onclick="togglePwd('su-password','su-pwd-icon')"
+          <label class="block text-sm mb-1 text-cyan-200">Password * <span class="text-gray-500 font-normal">(min 10 characters, letters + numbers)</span></label>
+          <input id="su-password" type="password" autocomplete="new-password" maxlength="128" placeholder="••••••••" class="placeholder-gray-500 pr-12">
+          <button type="button" data-click="togglePwd" data-args='["su-password","su-pwd-icon"]'
             class="absolute right-4 top-9 text-gray-400 hover:text-white">
             <i id="su-pwd-icon" class="fas fa-eye"></i>
           </button>
         </div>
         <div>
           <label class="block text-sm mb-1 text-cyan-200">Phone</label>
-          <input id="su-phone" placeholder="+254..." class="placeholder-gray-500">
+          <input id="su-phone" type="tel" autocomplete="tel" maxlength="20" placeholder="+254..." class="placeholder-gray-500">
         </div>
         <div id="signup-error" class="hidden text-red-300 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3"></div>
-        <button type="button" onclick="customerSignUp()"
+        <button type="button" data-click="customerSignUp"
           class="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-bold py-3 rounded-2xl text-lg transition-colors">
           <i class="fas fa-user-plus mr-2"></i> Create Account
         </button>
         <p class="text-center text-sm text-gray-400">
           Already have an account?
-          <a onclick="showPanel('panel-login')" class="text-cyan-400 hover:underline cursor-pointer font-medium">Sign in</a>
+          <a data-click="showPanel" data-args='["panel-login"]' class="text-cyan-400 hover:underline cursor-pointer font-medium">Sign in</a>
         </p>
       </div>
     </div>
@@ -110,17 +102,17 @@
 
 <!-- ═══ MAIN APP ═══ -->
 <div id="main-app" class="h-screen flex flex-col" style="display:none">
-  <nav class="bg-[#0A2540] border-b border-cyan-900 px-6 py-4 flex items-center justify-between flex-shrink-0">
+  <nav class="bg-[#0A2540] border-b border-cyan-900 px-6 py-4 flex items-center justify-between shrink-0">
     <div class="flex items-center gap-3">
       <i class="fas fa-ship text-3xl text-cyan-400"></i>
-      <div><h1 class="text-2xl font-bold">Coast Boat Rental</h1><p class="text-xs text-cyan-300">CBRDMS v1.0 · Supabase</p></div>
+      <div><h1 class="text-2xl font-bold">Coast Boat Rental</h1><p class="text-xs text-cyan-300">CBRDMS v1.1 · Supabase</p></div>
     </div>
     <div class="flex items-center gap-6">
       <div class="text-right">
         <p class="font-semibold" id="current-user"></p>
         <p class="text-xs text-cyan-300" id="current-role"></p>
       </div>
-      <button onclick="logout()" class="px-6 py-2 bg-red-600 hover:bg-red-500 rounded-2xl text-sm font-medium transition-colors">
+      <button data-click="logout" class="px-6 py-2 bg-red-600 hover:bg-red-500 rounded-2xl text-sm font-medium transition-colors">
         <i class="fas fa-sign-out-alt mr-1"></i> Logout
       </button>
     </div>
@@ -146,14 +138,14 @@
       <div id="section-boats" style="display:none">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold">Boat Registry</h2>
-          <button id="btn-add-boat" onclick="openModal('modal-add-boat')"
+          <button id="btn-add-boat" data-click="openModal" data-args='["modal-add-boat"]'
             class="hidden px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl transition-colors">
             <i class="fas fa-plus mr-2"></i>Add Boat
           </button>
         </div>
         <div class="flex gap-3 mb-4">
-          <input type="text" placeholder="Search boats..." style="max-width:240px" oninput="filterBoatCards(this.value)">
-          <select id="boat-status-filter" style="max-width:160px" onchange="loadBoats()">
+          <input type="text" placeholder="Search boats..." style="max-width:240px" data-input="filterBoatCards">
+          <select id="boat-status-filter" style="max-width:160px" data-change="loadBoats">
             <option value="">All Statuses</option><option>Available</option><option>Rented</option><option>Maintenance</option>
           </select>
         </div>
@@ -166,15 +158,15 @@
       <div id="section-bookings" style="display:none">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold">Bookings</h2>
-          <button onclick="openModal('modal-add-booking')"
+          <button data-click="openModal" data-args='["modal-add-booking"]'
             class="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl transition-colors">
             <i class="fas fa-plus mr-2"></i>New Booking
           </button>
         </div>
         <div class="card overflow-hidden">
           <div class="p-4 border-b border-white/5 flex gap-3">
-            <input type="text" placeholder="Search..." style="max-width:200px" oninput="filterTbody('bookings-tbody',this.value)">
-            <select id="bk-status-filter" style="max-width:160px" onchange="loadBookings()">
+            <input type="text" placeholder="Search..." style="max-width:200px" data-input="filterTbody" data-args='["bookings-tbody"]'>
+            <select id="bk-status-filter" style="max-width:160px" data-change="loadBookings">
               <option value="">All Statuses</option><option>Pending</option><option>Approved</option>
               <option>Rejected</option><option>Completed</option><option>Cancelled</option>
             </select>
@@ -191,7 +183,7 @@
         <h2 class="text-2xl font-bold mb-6">Registered Customers</h2>
         <div class="card overflow-hidden">
           <div class="p-4 border-b border-white/5">
-            <input type="text" placeholder="Search customers..." style="max-width:280px" oninput="filterTbody('customers-tbody',this.value)">
+            <input type="text" placeholder="Search customers..." style="max-width:280px" data-input="filterTbody" data-args='["customers-tbody"]'>
           </div>
           <div class="overflow-x-auto">
             <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>ID Number</th><th>Joined</th><th>Actions</th></tr></thead>
@@ -204,7 +196,7 @@
       <div id="section-payments" style="display:none">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold">Payments</h2>
-          <button onclick="openModal('modal-add-payment')"
+          <button data-click="openModal" data-args='["modal-add-payment"]'
             class="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl transition-colors">
             <i class="fas fa-plus mr-2"></i>Record Payment
           </button>
@@ -221,7 +213,7 @@
       <div id="section-incidents" style="display:none">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold">Incidents & Damage</h2>
-          <button onclick="openModal('modal-add-incident')"
+          <button data-click="openModal" data-args='["modal-add-incident"]'
             class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl transition-colors">
             <i class="fas fa-exclamation-triangle mr-2"></i>Report Incident
           </button>
@@ -250,15 +242,30 @@
       <div id="section-users" style="display:none">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold">Staff Users</h2>
-          <button id="btn-add-user" onclick="openModal('modal-add-user')"
+          <button id="btn-add-user" data-click="openModal" data-args='["modal-add-user"]'
             class="hidden px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl transition-colors">
-            <i class="fas fa-user-plus mr-2"></i>Add User
+            <i class="fas fa-user-plus mr-2"></i>Invite Staff
           </button>
         </div>
         <div class="card overflow-hidden">
           <div class="overflow-x-auto">
             <table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Phone</th><th>Actions</th></tr></thead>
             <tbody id="users-tbody"><tr><td colspan="5" class="text-center py-8 text-gray-500">Loading...</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUDIT LOG (Admin only) -->
+      <div id="section-audit" style="display:none">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold">Audit Log</h2>
+          <button type="button" data-click="loadAudit" class="px-5 py-2 bg-white/10 hover:bg-white/20 rounded-2xl text-sm font-medium"><i class="fas fa-sync mr-2"></i>Refresh</button>
+        </div>
+        <p class="text-xs text-gray-400 mb-3">Append-only record of every change: who, what, when. Entries cannot be edited or deleted.</p>
+        <div class="card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table><thead><tr><th>When</th><th>Who</th><th>Record</th><th>Action</th><th>Changed fields</th></tr></thead>
+            <tbody id="audit-tbody"><tr><td colspan="5" class="text-center py-8 text-gray-500">Loading...</td></tr></tbody></table>
           </div>
         </div>
       </div>
@@ -286,8 +293,8 @@
 
     </div>
   </div>
-  <footer class="bg-[#0A2540] text-xs text-center py-3 text-cyan-300 flex-shrink-0">
-    Coast Boat Rental Digital Management System v1.0 | Submitted for Fundamentals of Software Engineering
+  <footer class="bg-[#0A2540] text-xs text-center py-3 text-cyan-300 shrink-0">
+    Coast Boat Rental Digital Management System v1.1 | Submitted for Fundamentals of Software Engineering
   </footer>
 </div>
 
@@ -297,7 +304,7 @@
 <div id="modal-add-boat" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none">
   <div class="card w-full max-w-md p-8 max-h-[90vh] overflow-y-auto">
     <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Add New Boat</h3>
-      <button onclick="closeModal('modal-add-boat')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-add-boat"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <div class="space-y-4">
       <div><label class="block text-xs text-gray-400 mb-1">Boat Name *</label><input id="b-name" placeholder="e.g. Sea Breeze"></div>
       <div class="grid grid-cols-2 gap-4">
@@ -311,8 +318,8 @@
         <div id="b-photo-preview" class="hidden mt-2"><img id="b-photo-img" class="boat-photo"></div>
       </div>
       <div class="flex gap-3 pt-2">
-        <button onclick="addBoat()" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Add Boat</button>
-        <button onclick="closeModal('modal-add-boat')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="addBoat" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Add Boat</button>
+        <button data-click="closeModal" data-args='["modal-add-boat"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -322,14 +329,14 @@
 <div id="modal-edit-status" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none">
   <div class="card w-full max-w-sm p-8">
     <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Update Boat Status</h3>
-      <button onclick="closeModal('modal-edit-status')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-edit-status"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <input type="hidden" id="es-boat-id">
     <div class="space-y-4">
       <div><label class="block text-xs text-gray-400 mb-1">New Status</label>
         <select id="es-status"><option>Available</option><option>Rented</option><option>Maintenance</option></select></div>
       <div class="flex gap-3 pt-2">
-        <button onclick="updateBoatStatus()" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Update</button>
-        <button onclick="closeModal('modal-edit-status')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="updateBoatStatus" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Update</button>
+        <button data-click="closeModal" data-args='["modal-edit-status"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -339,7 +346,7 @@
 <div id="modal-add-booking" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none">
   <div class="card w-full max-w-lg p-8 max-h-[90vh] overflow-y-auto">
     <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">New Booking</h3>
-      <button onclick="closeModal('modal-add-booking')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-add-booking"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <div class="space-y-4">
       <div><label class="block text-xs text-gray-400 mb-1">Customer *</label>
         <select id="bk-customer"><option value="">— Select Customer —</option></select></div>
@@ -355,8 +362,8 @@
       </div>
       <div><label class="block text-xs text-gray-400 mb-1">Notes</label><textarea id="bk-notes" rows="2" placeholder="Optional"></textarea></div>
       <div class="flex gap-3 pt-2">
-        <button onclick="addBooking()" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Create</button>
-        <button onclick="closeModal('modal-add-booking')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="addBooking" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Create</button>
+        <button data-click="closeModal" data-args='["modal-add-booking"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -366,7 +373,7 @@
 <div id="modal-add-payment" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none">
   <div class="card w-full max-w-md p-8">
     <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Record Payment</h3>
-      <button onclick="closeModal('modal-add-payment')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-add-payment"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <div class="space-y-4">
       <div><label class="block text-xs text-gray-400 mb-1">Booking *</label>
         <select id="pm-booking-id"><option value="">— Select Approved Booking —</option></select></div>
@@ -375,8 +382,8 @@
         <select id="pm-method"><option>Cash</option><option>MPesa</option><option>Card</option><option>Bank Transfer</option></select></div>
       <div><label class="block text-xs text-gray-400 mb-1">Reference / Receipt</label><input id="pm-reference" placeholder="MPesa code, receipt no., etc."></div>
       <div class="flex gap-3 pt-2">
-        <button onclick="recordPayment()" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Record</button>
-        <button onclick="closeModal('modal-add-payment')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="recordPayment" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Record</button>
+        <button data-click="closeModal" data-args='["modal-add-payment"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -386,7 +393,7 @@
 <div id="modal-add-incident" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none">
   <div class="card w-full max-w-md p-8">
     <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Report Incident / Damage</h3>
-      <button onclick="closeModal('modal-add-incident')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-add-incident"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <div class="space-y-4">
       <div><label class="block text-xs text-gray-400 mb-1">Boat *</label>
         <select id="i-boat"><option value="">Loading...</option></select></div>
@@ -395,8 +402,8 @@
       <div><label class="block text-xs text-gray-400 mb-1">Damage Photo</label>
         <input id="i-photo" type="file" accept="image/*"></div>
       <div class="flex gap-3 pt-2">
-        <button onclick="addIncident()" class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl">Submit</button>
-        <button onclick="closeModal('modal-add-incident')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="addIncident" class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl">Submit</button>
+        <button data-click="closeModal" data-args='["modal-add-incident"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -405,20 +412,20 @@
 <!-- Add User (Admin only) -->
 <div id="modal-add-user" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none">
   <div class="card w-full max-w-md p-8">
-    <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Add Staff User</h3>
-      <button onclick="closeModal('modal-add-user')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+    <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Invite Staff User</h3>
+      <button data-click="closeModal" data-args='["modal-add-user"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <div class="space-y-4">
-      <div><label class="block text-xs text-gray-400 mb-1">Full Name *</label><input id="u-name" placeholder="Jane Doe"></div>
-      <div><label class="block text-xs text-gray-400 mb-1">Email *</label><input id="u-email" type="email" placeholder="jane@company.com"></div>
-      <div><label class="block text-xs text-gray-400 mb-1">Password * (min 6 chars)</label><input id="u-password" type="password" placeholder="Set a password"></div>
+      <div><label class="block text-xs text-gray-400 mb-1">Full Name *</label><input id="u-name" maxlength="100" placeholder="Jane Doe"></div>
+      <div><label class="block text-xs text-gray-400 mb-1">Email *</label><input id="u-email" type="email" maxlength="254" placeholder="jane@company.com"></div>
+      <p class="text-xs text-gray-400 bg-white/5 rounded-xl p-3">No password is set here. The person signs up with this e-mail, confirms it, and is then given the role below.</p>
       <div class="grid grid-cols-2 gap-4">
         <div><label class="block text-xs text-gray-400 mb-1">Role *</label>
           <select id="u-role"><option>Operator</option><option>Manager</option><option>Admin</option></select></div>
-        <div><label class="block text-xs text-gray-400 mb-1">Phone</label><input id="u-phone" placeholder="+254..."></div>
+        <div><label class="block text-xs text-gray-400 mb-1">Phone</label><input id="u-phone" type="tel" maxlength="20" placeholder="+254..."></div>
       </div>
       <div class="flex gap-3 pt-2">
-        <button onclick="addUser()" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Create User</button>
-        <button onclick="closeModal('modal-add-user')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="addUser" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-2xl">Send Invitation</button>
+        <button data-click="closeModal" data-args='["modal-add-user"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -429,7 +436,7 @@
   <div class="card w-full max-w-md p-8">
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold">Book: <span id="c-book-boat-name" class="text-cyan-400"></span></h3>
-      <button onclick="closeModal('modal-c-book')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-c-book"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4">
         <div><label class="block text-xs text-gray-400 mb-1">From *</label><input id="c-book-start" type="date"></div>
@@ -442,8 +449,8 @@
       <div><label class="block text-xs text-gray-400 mb-1">Notes</label><textarea id="c-book-notes" rows="2" placeholder="Any special requests?"></textarea></div>
       <p class="text-xs text-gray-500">Your request will be reviewed by staff. You'll see the status in My Bookings.</p>
       <div class="flex gap-3 pt-2">
-        <button onclick="submitCustomerBooking()" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-2xl">Send Request</button>
-        <button onclick="closeModal('modal-c-book')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="submitCustomerBooking" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-2xl">Send Request</button>
+        <button data-click="closeModal" data-args='["modal-c-book"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -454,7 +461,7 @@
   <div class="card w-full max-w-md p-8">
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold">Make Payment</h3>
-      <button onclick="closeModal('modal-c-payment')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-c-payment"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <input type="hidden" id="c-pay-booking-id">
     <div class="space-y-4">
       <div><label class="block text-xs text-gray-400 mb-1">Amount (KSh) — Balance: <span id="c-pay-max" class="text-cyan-400"></span></label>
@@ -464,8 +471,8 @@
       <div><label class="block text-xs text-gray-400 mb-1">MPesa Code / Reference</label>
         <input id="c-pay-reference" placeholder="e.g. QA12BC345D"></div>
       <div class="flex gap-3 pt-2">
-        <button onclick="submitCustomerPayment()" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-2xl">Pay Now</button>
-        <button onclick="closeModal('modal-c-payment')" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
+        <button data-click="submitCustomerPayment" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-2xl">Pay Now</button>
+        <button data-click="closeModal" data-args='["modal-c-payment"]' class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-2xl">Cancel</button>
       </div>
     </div>
   </div>
@@ -476,7 +483,7 @@
   <div class="card w-full max-w-2xl p-8 max-h-[90vh] overflow-y-auto">
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold" id="cb-modal-title">Customer Bookings</h3>
-      <button onclick="closeModal('modal-customer-bookings')" class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
+      <button data-click="closeModal" data-args='["modal-customer-bookings"]' class="text-gray-400 hover:text-white text-2xl"><i class="fas fa-times"></i></button></div>
     <div class="overflow-x-auto">
       <table><thead><tr><th>ID</th><th>Boat</th><th>Dates</th><th>Amount</th><th>Status</th><th>Payment</th></tr></thead>
       <tbody id="cb-modal-tbody"></tbody></table>
@@ -486,29 +493,21 @@
 
 <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2"></div>
 
-<!-- Scripts — order matters -->
-
-<script src="js/supabase.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/boats.js"></script>
-<script src="js/bookings.js"></script>
-<script src="js/payments.js"></script>
-<script src="js/customers.js"></script>
-<script src="js/incidents.js"></script>
-<script src="js/users.js"></script>
-<script src="js/reports.js"></script>
-<script>showPanel("panel-login");</script>
-<script>
-  // If you can see this alert, JS is running fine
-  console.log('All scripts loaded. showPanel exists:', typeof showPanel);
-  console.log('unifiedLogin exists:', typeof unifiedLogin);
-  console.log('showSection exists:', typeof showSection);
-  if (typeof showPanel === 'undefined') {
-    alert('showPanel is not defined - utils.js failed to load');
-  }
-  if (typeof unifiedLogin === 'undefined') {
-    alert('unifiedLogin is not defined - supabase.js failed to load');
-  }
-</script>
+<!-- Scripts: local, pinned copies only (see package.json); SRI hashes are written by `npm run build` -->
+<script src="vendor/supabase.js" integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK" crossorigin="anonymous"></script>
+<script src="vendor/chart.umd.min.js" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<script src="js/config.js" integrity="sha384-60t8ySnXYg4CAHZSjYNew3GRKK8nF74NRtYE/QnIdNkrHVOJXioslGYKLdrUS/b9" crossorigin="anonymous"></script>
+<script src="js/utils.js" integrity="sha384-jBQTZwxu+LueppbASq12x7aXMcsbQM7JqET41p71Sf4vVPeym/IBoWblNVfB5tNW" crossorigin="anonymous"></script>
+<script src="js/supabase.js" integrity="sha384-D3D63ro4vswowelpGG0rDNagVKNBdefElCiG+51Tm12YV4oJBKLC4s7HGiQ4zF7b" crossorigin="anonymous"></script>
+<script src="js/dashboard.js" integrity="sha384-SFI6QE1pqt7S8MeJQfwepAiiPAsLMS8dKCNrdDkqceOf2kmuq3iP9i2cFjOgOPUf" crossorigin="anonymous"></script>
+<script src="js/boats.js" integrity="sha384-ex3m3ySAwZpeVyOgKYXaQ30ITx1+CnIA2M9A23Q5GGe8wZmQ9foB2lw7o4Qo8I4A" crossorigin="anonymous"></script>
+<script src="js/bookings.js" integrity="sha384-bf84OuIEvWelcu3jXXN88J8dVqehzRc4T/acZCXCpO9sEkbgDla/o5MnZmiHDfc9" crossorigin="anonymous"></script>
+<script src="js/payments.js" integrity="sha384-vQrUC0DJO+xjom7Iii8g23qK6wFJXWZFCQ/BbHUAY/5FFdccAfy4bzpEiK/66GP/" crossorigin="anonymous"></script>
+<script src="js/customers.js" integrity="sha384-vKSzr5dcXLZYVWy3XPf2590e10cKc0N2zItLk144hhBRJS6hTAcftAx79vXkHutx" crossorigin="anonymous"></script>
+<script src="js/incidents.js" integrity="sha384-N2ix/vaRvkD4HYV4NOQ6FD/tVhagzvP1c7Fva5BLBLYqrX1gtepCSD/kAAaFDace" crossorigin="anonymous"></script>
+<script src="js/users.js" integrity="sha384-EWu72hbRue8SmNijuBaL76X4gzfCZm9QRl6CEsJm/QcxmqxJYozye5SJnxocO9uD" crossorigin="anonymous"></script>
+<script src="js/reports.js" integrity="sha384-nClNW38KdpdapURXNpVBe+sORoN5WiMfgn88efZTdqhv+XUABGSjMtoi7LfGy/QR" crossorigin="anonymous"></script>
+<script src="js/auditlog.js" integrity="sha384-P0fdhoAnwvYzMolIjhbsIEbCbHcueWpK6Vd1WsqHSbrxAb7OHmSq5MpBqT4/6zRK" crossorigin="anonymous"></script>
+<script src="js/main.js" integrity="sha384-oH0B8sbz/tAZOY18DyVMlT46Nt0vuWfVuMLyZNVA5cMlvfBczwbZM9ABGLsGl3U9" crossorigin="anonymous"></script>
 </body>
+</html>
