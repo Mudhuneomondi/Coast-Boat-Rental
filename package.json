@@ -1,0 +1,21 @@
+{
+  "name": "coast-boat-rental",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Coast Boat Rental Digital Management System (CBRDMS)",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "audit": "npm audit --audit-level=high",
+    "verify": "node scripts/build.mjs --check"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "6.7.2",
+    "@supabase/supabase-js": "2.118.0",
+    "chart.js": "4.5.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.0",
+    "tailwindcss": "4.3.0"
+  }
+}

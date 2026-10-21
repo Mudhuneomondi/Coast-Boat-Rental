@@ -1,3 +1,4 @@
+'use strict';
 let fleetChart = null;
 
 async function loadDashboard() {
@@ -16,19 +17,16 @@ async function loadDashboard() {
       { data: incidents, error: e3 },
       { data: customers, error: e4 }
     ] = await Promise.all([
-      sb.from('boats').select('status'),
-      sb.from('bookings').select('status, payment_status'),
+      sb.from('boats').select('status').is('deleted_at', null),
+      sb.from('bookings').select('status, payment_status').is('deleted_at', null),
       sb.from('incidents')
-        .select('status, incident_date, description, boats(name)')
+        .select('status, incident_date, description, boats(name)').is('deleted_at', null)
         .order('incident_date', { ascending: false }).limit(5),
-      sb.from('customers').select('id'),
+      sb.from('customers').select('id').is('deleted_at', null),
     ]);
 
-    // If any query errored, log it but keep going with empty arrays
-    if (e1) console.warn('boats query:', e1.message);
-    if (e2) console.warn('bookings query:', e2.message);
-    if (e3) console.warn('incidents query:', e3.message);
-    if (e4) console.warn('customers query:', e4.message);
+    // If any query errored, log it (console only) but keep going with empty arrays
+    [e1, e2, e3, e4].filter(Boolean).forEach(e => friendlyError(e));
 
     const b  = boats     || [];
     const bk = bookings  || [];
@@ -56,10 +54,10 @@ async function loadDashboard() {
     document.getElementById('kpi-grid').innerHTML = kpis.map(k => `
       <div class="card p-5">
         <div class="flex items-center gap-2 mb-2">
-          <i class="fas fa-${k.icon} ${k.color}"></i>
-          <span class="text-xs text-gray-400 uppercase tracking-wider">${k.label}</span>
+          <i class="fas fa-${esc(k.icon)} ${esc(k.color)}"></i>
+          <span class="text-xs text-gray-400 uppercase tracking-wider">${esc(k.label)}</span>
         </div>
-        <p class="text-2xl font-bold">${k.value}</p>
+        <p class="text-2xl font-bold">${int(k.value)}</p>
       </div>`).join('');
 
     // Fleet chart
@@ -81,20 +79,18 @@ async function loadDashboard() {
       ? i.map(x => `
           <div class="flex items-start justify-between py-2 border-b border-white/5 last:border-0">
             <div>
-              <p class="font-medium text-white text-sm">${x.boats?.name || '—'}</p>
-              <p class="text-gray-500 text-xs">${(x.description||'').slice(0,60)}${(x.description||'').length > 60 ? '...' : ''}</p>
+              <p class="font-medium text-white text-sm">${esc(x.boats?.name || '—')}</p>
+              <p class="text-gray-500 text-xs">${esc((x.description || '').slice(0, 60))}${(x.description || '').length > 60 ? '...' : ''}</p>
             </div>
-            <span class="badge status-${(x.status||'').toLowerCase()} ml-2 shrink-0">${x.status}</span>
+            <span class="ml-2 shrink-0">${badge(x.status)}</span>
           </div>`).join('')
       : '<p class="text-gray-500 text-xs text-center py-4">No incidents yet</p>';
 
   } catch (err) {
-    console.error('Dashboard error:', err);
+    console.error('[CBR] dashboard', err);
     document.getElementById('kpi-grid').innerHTML = `
       <div class="col-span-4 text-center py-6 text-red-400 text-sm">
-        <i class="fas fa-exclamation-circle mr-2"></i>
-        Failed to load dashboard. Check console for details.<br>
-        <span class="text-xs text-gray-500 mt-1 block">Most likely cause: RLS is enabled in Supabase. Go to Table Editor → each table → Disable RLS.</span>
+        <i class="fas fa-exclamation-circle mr-2"></i>Could not load the dashboard. Please try again.
       </div>`;
   }
 }

@@ -1,0 +1,14 @@
+/* Tailwind v4 build input — compiled by `npm run build` into vendor/tailwind.css.
+   (Replaces the cdn.tailwindcss.com runtime script, which needs 'unsafe-eval'
+   and cannot be pinned or given an SRI hash.) */
+@import "tailwindcss" source(none);
+/* Scan ONLY the app files. Without source(none) Tailwind also scans docs/tests,
+   so the compiled CSS differs between machines and the CI drift check fails. */
+@source "../index.html";
+@source "../js";
+
+/* v3 → v4 compatibility: keep the look this app was designed with */
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
+  button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+}
