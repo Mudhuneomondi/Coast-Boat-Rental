@@ -10,7 +10,7 @@ jobs:
   supply-chain:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci --ignore-scripts          # exact versions from package-lock.json
@@ -33,7 +33,7 @@ jobs:
       PGUSER: postgres
       PGPASSWORD: postgres
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Load mock Supabase schemas, then schema.sql (twice → proves it is re-runnable)
         run: |
           psql -v ON_ERROR_STOP=1 -q -f supabase/tests/mock_supabase.sql
