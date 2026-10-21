@@ -112,7 +112,7 @@ alter table public.customers add column if not exists auth_id    uuid references
 create unique index if not exists users_auth_id_uq     on public.users(auth_id)     where auth_id is not null;
 create unique index if not exists customers_auth_id_uq on public.customers(auth_id) where auth_id is not null;
 
--- (A02) passwords are no longer stored by the app at all — Supabase Auth hashes them (bcrypt)
+-- (A04) passwords are no longer stored by the app at all — Supabase Auth hashes them (bcrypt)
 alter table public.users     drop column if exists password_hash;
 alter table public.customers drop column if exists password_hash;
 
@@ -130,7 +130,7 @@ end $$;
 update public.users set deleted_at = coalesce(deleted_at, now()) where auth_id is null;
 
 -- ─────────────────────────────────────────────────────────────────────────
--- 2. CONSTRAINTS  (A03/A04 — the database refuses malformed data even if the
+-- 2. CONSTRAINTS  (A05/A06 — the database refuses malformed data even if the
 --    front end is bypassed). NOT VALID = enforced for new/changed rows.
 -- ─────────────────────────────────────────────────────────────────────────
 do $$

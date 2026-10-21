@@ -1,7 +1,7 @@
 'use strict';
 // ═════════════════════════════════════════════════════════════════════════
 // Shared helpers. SECURITY NOTES
-//  • esc()        — every database value that reaches innerHTML MUST go through it (XSS, A03)
+//  • esc()        — every database value that reaches innerHTML MUST go through it (XSS, A05)
 //  • act()        — builds data-click attributes; there are NO inline onclick= handlers
 //                   anywhere, so the CSP can forbid inline scripts entirely
 //  • friendlyError() — users see a safe message; technical detail stays in the console
